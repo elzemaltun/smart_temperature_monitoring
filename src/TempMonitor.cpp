@@ -11,8 +11,8 @@ const char* mqtt_server = "broker.mqtt-dashboard.com";
 const char* topic = "temperature";
 
 // LEDs and TMP pins
-#define GREEN_LED 15
-#define RED_LED 2
+#define GREEN_LED 5
+#define RED_LED 13
 #define TEMP_PIN 34
 
 // Temp calculation
@@ -59,6 +59,8 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
       client.subscribe(topic);
+      digitalWrite(GREEN_LED, HIGH);
+      digitalWrite(RED_LED, LOW);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -93,13 +95,13 @@ void loop() {
   if (now - lastMsgTime > 10000) {
     lastMsgTime = now;
     value++;
+    String tempStr = String(temp);
 
     /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, "hello world #%ld", value);
+    snprintf (msg, MSG_BUFFER_SIZE, tempStr.c_str(), value);
+    Serial.println(String("Publishing message: ") + msg);    
 
-    Serial.println(String("Publishing message: ") + msg);
-    
     /* publishing the msg */
-    client.publish(topic, msg);  
+    client.publish(topic, tempStr.c_str());  
   }
 }
