@@ -20,6 +20,8 @@ public:
     void updateDisplay(const char* mode, uint8_t percentage, float temperature);
     void lcdPowerOff();
     void lcdPowerOn();
+    void displayStatus(uint8_t percentage, float temperature, int mode);
+
 };
 
 #endif // LCDCONTROLLER_H

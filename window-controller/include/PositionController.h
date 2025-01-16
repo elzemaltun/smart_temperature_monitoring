@@ -1,11 +1,11 @@
-#ifndef __POTENTIOMETER__
-#define __POTENTIOMETER__
+#ifndef __POSITIONCONTROLLER__
+#define __POSITIONCONTROLLER__
 
 #include <Arduino.h>
 
-class Potentiometer {
+class PositionController {
 public:
-    Potentiometer(int pin);
+    PositionController(int pin);
     void init();
     int getPercentage();
 

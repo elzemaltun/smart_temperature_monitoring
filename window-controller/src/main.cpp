@@ -1,18 +1,25 @@
 #include <Arduino.h>
-
-
-/* included for testing */
+#include "WindowControlTask.h"
+#include "SerialCommTask.h"
+#include "Button.h"
 #include "LcdController.h"
+#include "ServoController.h"
+#include "PositionController.h"
 
+Button button(2);
+LcdController lcd(0x27, 16, 2);  // I2C address, 16x2 LCD
+ServoController servo(9);
+PositionController potentiometer(A0);
 
-// put function declarations here:
+WindowControlTask windowControlTask(&button, &lcd, &servo, &potentiometer);
+SerialCommTask serialCommTask(&windowControlTask);
 
 void setup() {
-  // put your setup code here, to run once:
-  
+    windowControlTask.init();
+    serialCommTask.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    windowControlTask.tick();
+    serialCommTask.tick();
 }
-

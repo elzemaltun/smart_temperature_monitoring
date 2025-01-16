@@ -39,6 +39,21 @@ void LcdController::updateDisplay(const char* mode, uint8_t percentage, float te
     displayWindowPercentage(percentage);
 }
 
+void LcdController::displayStatus(uint8_t percentage, float temperature, int mode) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Mode: ");
+    lcd.print(mode == 0 ? "AUTO" : "MANUAL");
+    lcd.setCursor(0, 1);
+    lcd.print("Window: ");
+    lcd.print(percentage);
+    lcd.print("%");
+    lcd.print(" Temp: ");
+    lcd.print(temperature, 1);
+    lcd.print(" C");
+}
+
+
 void LcdController::lcdPowerOff() {
     lcd.clear();
     lcd.noBacklight(); // Turn off the backlight
