@@ -32,6 +32,5 @@ void ServoController::closeWindow() {
 }
 
 void ServoController::update() {
-    // This function can be used to periodically check or update the servo position if needed.
-    // For now, it’s not essential but can be used for future enhancements.
+// not needed at the moment 
 }
