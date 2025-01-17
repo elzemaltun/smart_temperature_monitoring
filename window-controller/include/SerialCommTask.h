@@ -1,9 +1,10 @@
 #ifndef __SERIALCOMMTASK__
 #define __SERIALCOMMTASK__
 
+#include "Task.h"
 #include "WindowControlTask.h"
 
-class SerialCommTask {
+class SerialCommTask : public Task {
 private:
     WindowControlTask* windowControlTask;
     String ackMessage;
@@ -17,8 +18,9 @@ private:
 
 public:
     SerialCommTask(WindowControlTask* windowControlTask);
-    void init();
-    void tick();
+    void init(int period) override; // Inherit from Task
+    void tick() override;          // Inherit from Task
+    void readSerial();             // Read serial messages
 };
 
 #endif

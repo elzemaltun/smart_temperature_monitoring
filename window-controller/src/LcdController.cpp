@@ -39,6 +39,7 @@ void LcdController::updateDisplay(const char* mode, uint8_t percentage, float te
     displayWindowPercentage(percentage);
 }
 
+/* combined function that should display everything together */
 void LcdController::displayStatus(uint8_t percentage, float temperature, int mode) {
     lcd.clear();
     lcd.setCursor(0, 0);

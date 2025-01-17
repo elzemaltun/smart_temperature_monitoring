@@ -1,18 +1,24 @@
 #include "SerialCommTask.h"
 #include "Debug.h"
+#include <Arduino.h>
 
 SerialCommTask::SerialCommTask(WindowControlTask* windowControlTask) {
     this->windowControlTask = windowControlTask;
     this->ackMessage = "";
     this->windowOpeningLevel = 0;
-    this->mode = 0;
+    this->mode = AUTOMATIC; // Default mode
 }
 
-void SerialCommTask::init() {
-    Serial.begin(9600);
+void SerialCommTask::init(int period) {
+    Task::init(period);  // Call base class init
+    Serial.begin(9600);  // Initialize Serial communication
 }
 
 void SerialCommTask::tick() {
+    readSerial();
+}
+
+void SerialCommTask::readSerial() {
     if (Serial.available() > 0) {
         String message = Serial.readStringUntil('\n');
         parseMessage(message);
@@ -20,9 +26,6 @@ void SerialCommTask::tick() {
 }
 
 void SerialCommTask::parseMessage(String message) {
-    // Remove any extra spaces or invalid characters
-    message.trim();
-
     if (message.startsWith("{REQ")) {
         handleRequestMessage(message);
     } else {
@@ -31,35 +34,33 @@ void SerialCommTask::parseMessage(String message) {
 }
 
 void SerialCommTask::handleRequestMessage(String message) {
-    int modeIndex = message.indexOf("MODE");
-    int levelIndex = message.indexOf("WINDOW_OPENING_LEVEL");
+    // Parse and handle request message
+    Debugger.println("Handling request message: " + message);
+    
+    int modeReceived = message.charAt(5) - '0';  // Extract mode (0 or 1)
+    int windowLevelReceived = message.charAt(7) - '0';  // Extract window opening level (0-100)
 
-    if (modeIndex != -1 && levelIndex != -1) {
-        mode = message.substring(modeIndex + 5, modeIndex + 6).toInt();
-        windowOpeningLevel = message.substring(levelIndex + 22).toInt();
-
-        if (mode == 0) {
-            windowControlTask->switchToAutomaticMode(windowOpeningLevel);
-        } else if (mode == 1) {
-            windowControlTask->switchToManualMode(windowOpeningLevel);
-        }
-
-        sendStatusMessage();
-    } else {
-        sendErrorMessage();
+    // If mode changes, update mode and window control task
+    if (modeReceived != mode) {
+        mode = modeReceived;
+        windowControlTask->setMode(static_cast<Mode>(mode));  // Set the new mode
     }
+
+    // If mode is manual, update window level
+    if (mode == MANUAL) {
+        windowOpeningLevel = windowLevelReceived;
+        windowControlTask->setWindowLevel(windowOpeningLevel);  // Set the window level
+    }
+
+    sendStatusMessage();
 }
 
 void SerialCommTask::sendStatusMessage() {
-    int currentMode = windowControlTask->getMode();
-    int currentWindowPercentage = windowControlTask->getWindowPercentage();
-    float currentTemperature = windowControlTask->getTemperature();
-
-    ackMessage = "{ACK, " + String(currentWindowPercentage) + ", " + String(currentTemperature, 1) + ", " + String(currentMode) + "}";
-    Serial.println(ackMessage);
+    // Sending back the acknowledgment message in the required format
+    String statusMessage = "{ACK, " + String(windowOpeningLevel) + ", " + String(25.0) + ", " + String(mode) + "}";  // Placeholder temperature
+    Serial.println(statusMessage);
 }
 
 void SerialCommTask::sendErrorMessage() {
-    ackMessage = "{ERROR}";
-    Serial.println(ackMessage);
+    Serial.println("ERROR: Invalid Command");
 }
