@@ -54,5 +54,5 @@ void setup() {
 
 void loop() {
     serialCommTask->readSerial();  // Handle incoming serial communication
-    sched.schedule();  // Execute scheduled tasks
+    sched.schedule();              // Execute scheduled tasks
 }

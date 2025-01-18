@@ -42,8 +42,11 @@ void WindowControlTask::handleAutomaticMode() {
 }
 
 void WindowControlTask::handleManualMode() {
-    windowPercentage = potentiometer->getPercentage();
-    servo->moveToPercentage(windowPercentage);
+    int newPercentage = potentiometer->getPercentage();
+    if (newPercentage != windowPercentage) {
+        windowPercentage = newPercentage;
+        servo->moveToPercentage(windowPercentage);  // Move the servo to the new level
+    }
     lcd->displayStatus(windowPercentage, temperature, mode);
 
     if (button->isPressed()) {

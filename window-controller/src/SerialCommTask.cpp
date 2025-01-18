@@ -19,7 +19,7 @@ void SerialCommTask::tick() {
 }
 
 void SerialCommTask::readSerial() {
-    if (Serial.available() > 0) {
+    while (Serial.available() > 0) {
         String message = Serial.readStringUntil('\n');
         parseMessage(message);
     }
@@ -29,7 +29,7 @@ void SerialCommTask::parseMessage(String message) {
     if (message.startsWith("{REQ")) {
         handleRequestMessage(message);
     } else {
-        sendErrorMessage();
+       // sendErrorMessage();
     }
 }
 
@@ -49,7 +49,7 @@ void SerialCommTask::handleRequestMessage(String message) {
     // If mode is manual, update window level
     if (mode == MANUAL) {
         windowOpeningLevel = windowLevelReceived;
-        windowControlTask->setWindowLevel(windowOpeningLevel);  // Set the window level
+        //windowControlTask->setWindowLevel(windowOpeningLevel);  // Set the window level
     }
 
     sendStatusMessage();
