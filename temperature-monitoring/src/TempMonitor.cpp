@@ -41,11 +41,6 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-/* MQTT subscribing callback */
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.println(String("Message arrived on [") + topic + "] len: " + length );
-}
-
 void reconnect() {
   
   // Loop until we're reconnected  
@@ -53,7 +48,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Create a random client ID
-    String clientId = String("esiot-2023-client-")+String(random(0xffff), HEX);
+    String clientId = String("esiot-2024-client-")+String(random(0xffff), HEX);
 
     // Attempt to connect
     if (client.connect(clientId.c_str())) {
@@ -77,7 +72,6 @@ void setup() {
   setup_wifi();
   randomSeed(micros());
   client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
 }
@@ -98,7 +92,7 @@ void loop() {
     String tempStr = String(temp);
 
     /* creating a msg in the buffer */
-    snprintf (msg, MSG_BUFFER_SIZE, tempStr.c_str(), value);
+    snprintf (msg, MSG_BUFFER_SIZE, tempStr.c_str(), false, 2);
     Serial.println(String("Publishing message: ") + msg);    
 
     /* publishing the msg */

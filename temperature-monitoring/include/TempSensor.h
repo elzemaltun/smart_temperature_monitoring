@@ -10,7 +10,7 @@ private:
 
 public:
     // Constructor
-    TempSensor(uint8_t analogPin, float refVoltage = 3.3);
+    TempSensor(uint8_t analogPin);
 
     // Method to read temperature in Celsius
     float readTemperatureC();
