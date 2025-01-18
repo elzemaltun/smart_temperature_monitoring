@@ -10,5 +10,5 @@ void Button::init() {
 
 bool Button::isPressed() {
     // Directly read the button state since we will be running it as a task. no debounce needed
-    return digitalRead(pin) == LOW; // Assuming LOW means pressed
+    return digitalRead(pin) == LOW; 
 }
