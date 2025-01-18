@@ -53,7 +53,7 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     
     // Create a random client ID
-    String clientId = String("esiot-2023-client-")+String(random(0xffff), HEX);
+    String clientId = String("esiot-2024-client-")+String(random(0xffff), HEX);
 
     // Attempt to connect
     if (client.connect(clientId.c_str())) {
