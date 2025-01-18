@@ -6,9 +6,9 @@ WindowControlTask::WindowControlTask(Button* button, LcdController* lcd, ServoCo
     this->lcd = lcd;
     this->servo = servo;
     this->potentiometer = potentiometer;
-    this->mode = AUTOMATIC; // Default to AUTOMATIC mode
+    this->mode = AUTOMATIC;     // Default to AUTOMATIC mode
     this->windowPercentage = 0;
-    this->temperature = 25.0; // Placeholder temperature
+    this->temperature = 25.0;   // Placeholder temperature
 }
 
 void WindowControlTask::init(int period) {
@@ -32,7 +32,7 @@ void WindowControlTask::tick() {
 
 void WindowControlTask::handleAutomaticMode() {
     windowPercentage = 50;  // Placeholder for received level
-    servo->moveToPercentage(windowPercentage);
+    // servo->moveToPercentage(windowPercentage);
     lcd->displayStatus(windowPercentage, temperature, mode);
 
     if (button->isPressed()) {

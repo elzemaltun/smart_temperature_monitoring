@@ -25,7 +25,7 @@ SerialCommTask* serialCommTask;
 
 
 // Hardware components
-Button button(2);  // Button connected to pin 2
+Button button(7);  // Button connected to pin 2
 LcdController lcd(0x27, 16, 2);  // I2C address, 16x2 LCD
 ServoController servo(9);  // Servo connected to pin 9
 PositionController potentiometer(A0);  // Potentiometer connected to analog pin A0

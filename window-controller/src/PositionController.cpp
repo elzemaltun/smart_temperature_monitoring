@@ -10,5 +10,5 @@ void PositionController::init() {
 
 int PositionController::getPercentage() {
     int value = analogRead(pin);
-    return map(value, 0, 1023, 0, 100); // Maps the analog value to a percentage (0-100)
+    return map(value, 0, 1010, 0, 100); // Maps the analog value to a percentage (0-100) - value of analog adjusted to get full 100%
 }
