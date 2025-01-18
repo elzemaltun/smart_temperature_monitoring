@@ -33,12 +33,13 @@ public class MQTTAgent extends AbstractVerticle{
 		MqttClient client = MqttClient.create(vertx);
         client.connect(1883, BROKER_ADRESS, c-> {
 
+            
 			client.publishHandler(s -> {
-			  System.out.println(s.topicName() + ": " + s.payload().toString());
-			  System.out.println("QoS: " + s.qosLevel());
+			    System.out.println(s.topicName() + ": " + s.payload().toString());
+			    System.out.println("QoS: " + s.qosLevel());
 
-              String temperature = s.payload().toString();
-              messageHistory.add(temperature);
+                String temperature = s.payload().toString();
+                messageHistory.add(temperature);
 			})
 			.subscribe(TOPIC_NAME, 2);		
 
