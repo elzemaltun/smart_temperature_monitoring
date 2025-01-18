@@ -9,13 +9,13 @@ public class SerialCommunicator implements CommChannel, SerialPortEventListener 
     private BlockingQueue<String> queue; // for thread safety, handle events in seperate threads
     private StringBuffer currentMsg = new StringBuffer("");
 
-    public void SerialCommChannel(String port, int rate) throws Exception{
+    public SerialCommunicator(String port, int rate) throws Exception{
         queue = new ArrayBlockingQueue<String>(100);
 
         serialPort = new SerialPort(port);
         serialPort.openPort();
         serialPort.setParams(rate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE); // 8 bits for data, 1 bit for stop, none bits for error checking
-        serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT) //send and receive data
+        serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT); //send and receive data
         serialPort.addEventListener(this);
     }
 

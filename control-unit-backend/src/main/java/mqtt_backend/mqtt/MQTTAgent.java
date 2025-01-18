@@ -23,6 +23,9 @@ public class MQTTAgent extends AbstractVerticle{
     // Store the received temperature messages
     private List<String> messageHistory = new ArrayList<>();
 
+	// set the states by ccreating control unit class
+	private ControlUnit controlUnit;
+
     // Constructor for initalization
     public MQTTAgent() {
 	}
@@ -33,13 +36,15 @@ public class MQTTAgent extends AbstractVerticle{
 		MqttClient client = MqttClient.create(vertx);
         client.connect(1883, BROKER_ADRESS, c-> {
 
-            
 			client.publishHandler(s -> {
 			    System.out.println(s.topicName() + ": " + s.payload().toString());
 			    System.out.println("QoS: " + s.qosLevel());
 
                 String temperature = s.payload().toString();
                 messageHistory.add(temperature);
+
+				float currentTemperature = Float.parseFloat(temperature);
+                controlUnit.updateState(currentTemperature);
 			})
 			.subscribe(TOPIC_NAME, 2);		
 
