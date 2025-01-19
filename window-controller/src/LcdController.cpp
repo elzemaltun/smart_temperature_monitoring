@@ -1,5 +1,10 @@
 #include "LcdController.h"
 
+// Global variables to store previous values
+int prevMode = -1;
+uint8_t prevPercentage = 255;  // Invalid initial value
+float prevTemperature = -999.9; // Invalid initial value
+
 LcdController::LcdController(uint8_t address, uint8_t cols, uint8_t rows)
     : lcd(address, cols, rows), lcdCols(cols), lcdRows(rows) {}
 
@@ -41,19 +46,27 @@ void LcdController::updateDisplay(const char* mode, uint8_t percentage, float te
 
 /* combined function that should display everything together */
 void LcdController::displayStatus(uint8_t percentage, float temperature, int mode) {
-    lcd.setCursor(0, 0);
-    lcd.print("Mode: ");
-    lcd.print(mode == 0 ? "AUTO" : "MANUAL");
-    lcd.setCursor(0, 1);
-    lcd.print("Window:      "); // Ensure previous content is overwritten
-    lcd.setCursor(8, 1);
-    lcd.print(percentage);
-    lcd.print("%");
-    lcd.setCursor(0, 2);
-    lcd.print("Temp:      "); // Ensure previous content is overwritten
-    lcd.setCursor(6, 2);
-    lcd.print(temperature, 1);
-    lcd.print(" C");
+    // Only update the display if something has changed
+    if (mode != prevMode || percentage != prevPercentage || temperature != prevTemperature) {
+        lcd.setCursor(0, 0);
+        lcd.print("Mode:        "); // Ensure previous content is overwritten
+        lcd.print(mode == 0 ? "AUTO" : "MANUAL");
+        lcd.setCursor(0, 1);
+        lcd.print("Window:      "); // Ensure previous content is overwritten
+        lcd.setCursor(8, 1);
+        lcd.print(percentage);
+        lcd.print("%");
+        lcd.setCursor(0, 2);
+        lcd.print("Temp:      "); // Ensure previous content is overwritten
+        lcd.setCursor(6, 2);
+        lcd.print(temperature, 1);
+        lcd.print(" C");
+
+        // Update the previous state to current values
+        prevMode = mode;
+        prevPercentage = percentage;
+        prevTemperature = temperature;
+    }
 }
 
 void LcdController::lcdPowerOff() {
