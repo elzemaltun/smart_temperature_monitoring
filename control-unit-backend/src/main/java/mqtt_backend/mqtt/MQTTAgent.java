@@ -62,11 +62,6 @@ public class MQTTAgent extends AbstractVerticle{
 			})
 			.subscribe(TOPIC_NAME, 2);		
 
-			client.publish(TOPIC_NAME,
-				  Buffer.buffer("Sent by MQTT Agent"),
-				  MqttQoS.AT_LEAST_ONCE,
-				  false,
-				  false);
 		}); 
     }
 

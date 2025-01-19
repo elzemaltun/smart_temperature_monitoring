@@ -35,6 +35,7 @@ public class ControlUnit {
         switch(currentState){
             case NORMAL:
                 if (currentTemperature < T1){
+                    System.out.println("current mode mode is: " + currentState);
                     mode = "NORMAL";
                     motorAngle = 0;
                     frequency = F1;
