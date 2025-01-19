@@ -28,6 +28,12 @@ public class MQTTAgent extends AbstractVerticle{
 
     // Constructor for initalization
     public MQTTAgent() {
+		try {
+            this.controlUnit = new ControlUnit();
+        } catch (Exception e) {
+            System.err.println("Failed to initialize ControlUnit: " + e.getMessage());
+            e.printStackTrace();
+        }
 	}
 
     // Override start method in the AbstractVerticle class
@@ -43,8 +49,16 @@ public class MQTTAgent extends AbstractVerticle{
                 String temperature = s.payload().toString();
                 messageHistory.add(temperature);
 
-				float currentTemperature = Float.parseFloat(temperature);
-                controlUnit.updateState(currentTemperature);
+				try {
+                    float currentTemperature = Float.parseFloat(temperature);
+                    if (controlUnit != null) {
+                        controlUnit.updateState(currentTemperature);
+                    } else {
+                        System.err.println("ControlUnit is not initialized. Cannot update state.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Failed to parse temperature: " + temperature);
+                }
 			})
 			.subscribe(TOPIC_NAME, 2);		
 

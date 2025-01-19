@@ -1,6 +1,7 @@
 package mqtt_backend.mqtt;
 
 import io.netty.resolver.InetNameResolver;
+import mqtt_backend.serial.CommChannel;
 import mqtt_backend.serial.SerialCommunicator;
 
 public class ControlUnit {
@@ -9,16 +10,21 @@ public class ControlUnit {
     private float T1, T2;
     private float DT;
     private int F1, F2;
-    private SerialCommunicator serialCommunicator;
+    private CommChannel serialCommunicator;
 
     // initialize the serial communiator in the constructor
     public ControlUnit() throws Exception {
         serialCommunicator = new SerialCommunicator("COM3", 9600);
+        // Simulate a delay for Arduino to initialize
+        System.out.println("Waiting for Arduino to reboot...");
+        Thread.sleep(4000);
+        System.out.println("Arduino ready.");
         T1 = 27; // Celcius
         T2 = 34; // Celcius
         F1 = 3;
         F2 = 5;
         DT = 10000; // 10 seconds
+        currentState = SystemState.NORMAL;
     }
 
     public void updateState(float currentTemperature){
